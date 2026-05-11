@@ -1,405 +1,288 @@
 import { useState } from "react";
 import Icon from "@/components/ui/icon";
 
-const recipes = [
+const HERO_IMG = "https://cdn.poehali.dev/projects/b76d4371-5050-496e-8feb-c83dfe8aaaf7/files/87ee6024-bc25-47e0-8257-aea3f46adde4.jpg";
+const PREP_IMG = "https://cdn.poehali.dev/projects/b76d4371-5050-496e-8feb-c83dfe8aaaf7/files/7190225c-2a44-487b-9761-d1c12916a6e1.jpg";
+
+const ingredients = [
+  { amount: "500 мл", name: "молоко" },
+  { amount: "2 шт", name: "яйца" },
+  { amount: "200 г", name: "мука пшеничная" },
+  { amount: "1 ст.л.", name: "сахар" },
+  { amount: "½ ч.л.", name: "соль" },
+  { amount: "2 ст.л.", name: "растительное масло" },
+  { amount: "30 г", name: "сливочное масло — для смазки" },
+];
+
+const steps = [
   {
-    id: 1,
-    name: "Паста аль Помодоро",
-    category: "Итальянская кухня",
-    emoji: "🍝",
-    image: "https://cdn.poehali.dev/projects/b76d4371-5050-496e-8feb-c83dfe8aaaf7/files/3b4b3ba9-bfaa-4e3c-8454-3ff20e9b0847.jpg",
-    description:
-      "Классическая итальянская паста с насыщенным томатным соусом — простота, доведённая до совершенства. Это блюдо любят от Сицилии до Милана.",
-    history:
-      "Паста аль Помодоро появилась на юге Италии в конце XVIII века, когда томаты перестали считаться ядовитыми и начали завоёвывать кухни простых крестьян. В Неаполе говорят: настоящий соус помодоро варится не дольше 20 минут — только тогда сохраняется живость томата. Со временем рецепт разошёлся по всему полуострову, и каждый регион добавил свою нотку: базилик, оливки, каперсы.",
-    time: "25 мин",
-    servings: 4,
-    difficulty: "Просто",
-    calories: 380,
-    nutrition: { protein: 14, fat: 9, carbs: 62, fiber: 4 },
-    ingredients: [
-      "Спагетти — 400 г",
-      "Томаты в собственном соку — 800 г",
-      "Чеснок — 3 зубчика",
-      "Оливковое масло Extra Virgin — 4 ст.л.",
-      "Базилик свежий — пучок",
-      "Соль, сахар по вкусу",
-    ],
+    num: 1,
+    title: "Взбиваем яйца",
+    text: "Разбейте яйца в глубокую миску, добавьте сахар и соль. Взбейте венчиком до лёгкой пены — около 1 минуты.",
+    tip: "Яйца должны быть комнатной температуры — тесто получится однороднее.",
+    icon: "Egg",
   },
   {
-    id: 2,
-    name: "Медовик",
-    category: "Русская выпечка",
-    emoji: "🍯",
-    image: "https://cdn.poehali.dev/projects/b76d4371-5050-496e-8feb-c83dfe8aaaf7/files/373be290-af82-438d-b4fe-d841de2bda2b.jpg",
-    description:
-      "Нежный торт с тонкими медовыми коржами и сметанным кремом — символ русского домашнего уюта. Каждый кусочек тает во рту.",
-    history:
-      "По легенде, медовик был создан в начале XIX века при дворе Александра I. Молодой придворный кондитер испёк торт с мёдом, не зная, что императрица терпеть его не могла. Но торт так понравился, что его подали на высочайший стол — и медовик обрёл бессмертие. В народе рецепт упростился и обосновался в каждом доме. Сегодня медовик — неотъемлемая часть русских праздников и семейных посиделок.",
-    time: "3 часа",
-    servings: 10,
-    difficulty: "Средне",
-    calories: 420,
-    nutrition: { protein: 7, fat: 18, carbs: 58, fiber: 1 },
-    ingredients: [
-      "Мука — 500 г",
-      "Мёд натуральный — 3 ст.л.",
-      "Сахар — 200 г",
-      "Яйца — 3 шт",
-      "Сода — 1 ч.л.",
-      "Сметана 30% — 800 г (для крема)",
-      "Сахарная пудра — 200 г",
-    ],
+    num: 2,
+    title: "Добавляем молоко и муку",
+    text: "Влейте половину молока, постепенно добавьте муку, помешивая, чтобы не было комков. Затем влейте оставшееся молоко и растительное масло.",
+    tip: "Просейте муку заранее — блины будут нежнее.",
+    icon: "Milk",
   },
   {
-    id: 3,
-    name: "Крем-суп из белых грибов",
-    category: "Европейская кухня",
-    emoji: "🍄",
-    image: "https://cdn.poehali.dev/projects/b76d4371-5050-496e-8feb-c83dfe8aaaf7/files/4b430621-8b0f-4987-97c8-365a6c384bec.jpg",
-    description:
-      "Бархатистый суп с насыщенным ароматом белых грибов и нотками сливок. Согревает и наполняет дом запахом осеннего леса.",
-    history:
-      "Грибные супы-пюре пришли в Россию из французской высокой кухни в XVIII веке — именно тогда велюте и биск стали обязательными блюдами аристократических столов. Но в отличие от Европы, где использовали шампиньоны, русские повара предпочли белые грибы — боровики. Их богатый лесной аромат сделал этот суп особым. В монастырских кухнях крем-суп из грибов подавали в постные дни как торжественное блюдо.",
-    time: "45 мин",
-    servings: 6,
-    difficulty: "Просто",
-    calories: 210,
-    nutrition: { protein: 6, fat: 14, carbs: 16, fiber: 3 },
-    ingredients: [
-      "Белые грибы — 500 г",
-      "Лук репчатый — 2 шт",
-      "Сливки 20% — 300 мл",
-      "Бульон куриный — 800 мл",
-      "Масло сливочное — 50 г",
-      "Тимьян — 3 веточки",
-      "Соль, белый перец",
-    ],
+    num: 3,
+    title: "Даём тесту отдохнуть",
+    text: "Накройте миску полотенцем и оставьте тесто на 15–20 минут. За это время клейковина набухнет, и блины не будут рваться.",
+    tip: "Можно убрать тесто в холодильник на ночь — утром блины выйдут идеальными.",
+    icon: "Clock",
+  },
+  {
+    num: 4,
+    title: "Разогреваем сковороду",
+    text: "Хорошо разогрейте сковороду на среднем огне. Смажьте кусочком сливочного масла на вилке или бумажным полотенцем с маслом.",
+    tip: "Первый блин всегда «комом» — он нужен, чтобы настроить температуру.",
+    icon: "Flame",
+  },
+  {
+    num: 5,
+    title: "Выпекаем блины",
+    text: "Налейте половник теста и быстро наклоняйте сковороду круговыми движениями, чтобы тесто равномерно распределилось. Жарьте 1–1,5 минуты с каждой стороны до золотистого цвета.",
+    tip: "Края начинают подсыхать — пора переворачивать!",
+    icon: "ChefHat",
+  },
+  {
+    num: 6,
+    title: "Подаём на стол",
+    text: "Складывайте готовые блины стопкой, смазывая каждый сливочным маслом. Подавайте горячими со сметаной, мёдом, вареньем или икрой.",
+    tip: "Накройте стопку тарелкой — блины дольше останутся горячими.",
+    icon: "UtensilsCrossed",
   },
 ];
 
-const NutritionBar = ({
-  label,
-  value,
-  max,
-  color,
-}: {
-  label: string;
-  value: number;
-  max: number;
-  color: string;
-}) => (
-  <div className="mb-3">
-    <div className="flex justify-between mb-1">
-      <span className="text-xs font-body text-muted-foreground uppercase tracking-wide">{label}</span>
-      <span className="text-xs font-body font-semibold" style={{ color }}>
-        {value} г
-      </span>
-    </div>
-    <div className="h-1.5 bg-muted rounded-full overflow-hidden">
-      <div
-        className="h-full rounded-full transition-all duration-700"
-        style={{ width: `${Math.min((value / max) * 100, 100)}%`, backgroundColor: color }}
-      />
-    </div>
-  </div>
-);
-
 export default function Index() {
-  const [activeRecipe, setActiveRecipe] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState<"history" | "recipe" | "nutrition">("history");
-
-  const selectedRecipe = recipes.find((r) => r.id === activeRecipe);
+  const [activeStep, setActiveStep] = useState<number | null>(null);
 
   return (
-    <div className="min-h-screen" style={{ background: "hsl(35, 30%, 96%)" }}>
-      {/* Header */}
-      <header className="relative overflow-hidden" style={{ background: "hsl(15, 45%, 36%)" }}>
+    <div className="min-h-screen font-body" style={{ background: "hsl(38, 35%, 95%)" }}>
+
+      {/* Hero */}
+      <section className="relative h-[70vh] min-h-[480px] overflow-hidden">
+        <img
+          src={HERO_IMG}
+          alt="Блины"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
         <div
-          className="absolute inset-0 opacity-10"
+          className="absolute inset-0"
           style={{
-            backgroundImage: `radial-gradient(circle at 20% 50%, hsl(40,70%,70%) 0%, transparent 50%), 
-                             radial-gradient(circle at 80% 20%, hsl(30,60%,60%) 0%, transparent 40%)`,
+            background:
+              "linear-gradient(to bottom, rgba(20,10,0,0.25) 0%, rgba(20,10,0,0.65) 100%)",
           }}
         />
-        <div className="relative max-w-5xl mx-auto px-6 py-16 text-center">
-          <div
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-6 text-sm font-body font-medium"
-            style={{ background: "rgba(255,255,255,0.15)", color: "hsl(40,60%,90%)" }}
+        <div className="relative h-full flex flex-col items-center justify-end pb-14 px-6 text-center">
+          <span
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium mb-4 animate-fade-in-up"
+            style={{ background: "rgba(255,255,255,0.18)", color: "hsl(40,80%,92%)", animationDelay: "0.1s", opacity: 0 }}
           >
-            <span>🌿</span> Рецепты с душой и историей
-          </div>
+            🥞 Классический рецепт
+          </span>
           <h1
-            className="font-display text-5xl md:text-7xl font-bold mb-4 leading-tight"
-            style={{ color: "hsl(40, 60%, 92%)" }}
+            className="font-display text-6xl md:text-8xl font-bold leading-tight mb-3 animate-fade-in-up"
+            style={{ color: "hsl(40, 60%, 94%)", animationDelay: "0.2s", opacity: 0 }}
           >
-            Кухня с душой
+            Русские блины
           </h1>
           <p
-            className="font-body text-lg md:text-xl max-w-lg mx-auto leading-relaxed"
-            style={{ color: "hsl(35, 30%, 78%)" }}
+            className="text-base md:text-lg max-w-md leading-relaxed animate-fade-in-up"
+            style={{ color: "hsl(35, 30%, 82%)", animationDelay: "0.35s", opacity: 0 }}
           >
-            Каждое блюдо — это история, переданная через поколения. Готовьте с любовью.
+            Тонкие, золотистые, с хрустящими краями — таких блинов вы ещё не пробовали
           </p>
-        </div>
-      </header>
 
-      {/* Recipe Cards */}
-      <main className="max-w-5xl mx-auto px-6 py-16">
-        <div className="flex items-center gap-3 mb-10">
-          <div className="w-8 h-px" style={{ background: "hsl(15, 60%, 42%)" }} />
-          <h2 className="font-display text-3xl font-semibold" style={{ color: "hsl(20, 25%, 18%)" }}>
-            Избранные рецепты
-          </h2>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-6">
-          {recipes.map((recipe, i) => (
-            <button
-              key={recipe.id}
-              onClick={() => {
-                setActiveRecipe(recipe.id);
-                setActiveTab("history");
-              }}
-              className="animate-fade-in-up text-left rounded-2xl overflow-hidden transition-all duration-300 group shadow-sm hover:shadow-lg hover:scale-[1.01]"
-              style={{
-                animationDelay: `${i * 0.15}s`,
-                opacity: 0,
-                background: "hsl(35, 25%, 98%)",
-                outline: activeRecipe === recipe.id ? "2px solid hsl(15, 60%, 42%)" : "none",
-                transform: activeRecipe === recipe.id ? "scale(1.02)" : undefined,
-              }}
-            >
-              <div className="relative h-52 overflow-hidden">
-                <img
-                  src={recipe.image}
-                  alt={recipe.name}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div
-                  className="absolute inset-0"
-                  style={{ background: "linear-gradient(to top, rgba(30,15,5,0.5) 0%, transparent 60%)" }}
-                />
-                <span className="absolute top-3 right-3 text-2xl">{recipe.emoji}</span>
-                <div className="absolute bottom-3 left-3">
-                  <span
-                    className="inline-block px-2 py-1 rounded-full text-xs font-body font-medium"
-                    style={{ background: "rgba(255,255,255,0.9)", color: "hsl(15, 60%, 38%)" }}
-                  >
-                    {recipe.category}
-                  </span>
-                </div>
-              </div>
-              <div className="p-5">
-                <h3 className="font-display text-2xl font-semibold mb-2" style={{ color: "hsl(20, 25%, 18%)" }}>
-                  {recipe.name}
-                </h3>
-                <p className="font-body text-sm leading-relaxed mb-4" style={{ color: "hsl(20, 15%, 45%)" }}>
-                  {recipe.description.slice(0, 90)}…
-                </p>
-                <div className="flex items-center gap-4 text-xs font-body" style={{ color: "hsl(20, 15%, 50%)" }}>
-                  <span className="flex items-center gap-1">
-                    <Icon name="Clock" size={13} /> {recipe.time}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Icon name="Users" size={13} /> {recipe.servings} порц.
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Icon name="Flame" size={13} /> {recipe.calories} ккал
-                  </span>
-                </div>
-              </div>
-            </button>
-          ))}
-        </div>
-
-        {/* Detail Panel */}
-        {selectedRecipe && (
+          {/* Quick stats */}
           <div
-            className="mt-10 rounded-3xl overflow-hidden shadow-xl animate-fade-in-up"
-            style={{ background: "hsl(35, 25%, 98%)", animationDelay: "0s", opacity: 0 }}
+            className="flex gap-6 mt-8 animate-fade-in-up"
+            style={{ animationDelay: "0.5s", opacity: 0 }}
           >
-            <div className="md:flex">
-              {/* Image side */}
-              <div className="md:w-80 h-64 md:h-auto relative flex-shrink-0">
-                <img
-                  src={selectedRecipe.image}
-                  alt={selectedRecipe.name}
-                  className="w-full h-full object-cover"
-                />
+            {[
+              { icon: "Clock", label: "35 мин" },
+              { icon: "Users", label: "4 порции" },
+              { icon: "ChefHat", label: "Просто" },
+              { icon: "Flame", label: "185 ккал" },
+            ].map((s) => (
+              <div key={s.label} className="flex flex-col items-center gap-1">
                 <div
-                  className="absolute inset-0"
-                  style={{ background: "linear-gradient(135deg, rgba(30,15,5,0.4) 0%, transparent 70%)" }}
-                />
-                <div className="absolute top-5 left-5">
-                  <span className="text-4xl">{selectedRecipe.emoji}</span>
+                  className="w-9 h-9 rounded-full flex items-center justify-center"
+                  style={{ background: "rgba(255,255,255,0.2)" }}
+                >
+                  <Icon name={s.icon} size={16} style={{ color: "hsl(40,80%,90%)" }} />
                 </div>
+                <span className="text-xs font-medium" style={{ color: "hsl(35,30%,85%)" }}>
+                  {s.label}
+                </span>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-              {/* Content side */}
-              <div className="flex-1 p-7">
-                <div className="flex items-start justify-between mb-1">
-                  <span
-                    className="text-xs font-body uppercase tracking-widest"
-                    style={{ color: "hsl(15, 60%, 42%)" }}
-                  >
-                    {selectedRecipe.category}
+      <div className="max-w-3xl mx-auto px-6 py-14">
+
+        {/* Ingredients */}
+        <section className="mb-16 animate-fade-in-up" style={{ animationDelay: "0.1s", opacity: 0 }}>
+          <div className="flex items-center gap-3 mb-7">
+            <div className="w-7 h-px" style={{ background: "hsl(15, 60%, 42%)" }} />
+            <h2 className="font-display text-3xl font-semibold" style={{ color: "hsl(20, 25%, 20%)" }}>
+              Ингредиенты
+            </h2>
+          </div>
+
+          <div
+            className="rounded-3xl overflow-hidden md:flex gap-0 shadow-sm"
+            style={{ background: "hsl(35, 25%, 98%)" }}
+          >
+            <div className="md:w-56 h-44 md:h-auto flex-shrink-0 overflow-hidden">
+              <img src={PREP_IMG} alt="Ингредиенты" className="w-full h-full object-cover" />
+            </div>
+            <ul className="flex-1 p-6 divide-y" style={{ divideColor: "hsl(35, 20%, 90%)" }}>
+              {ingredients.map((ing, i) => (
+                <li
+                  key={i}
+                  className="flex items-center justify-between py-2.5 first:pt-0 last:pb-0"
+                >
+                  <span className="text-sm" style={{ color: "hsl(20, 20%, 35%)" }}>
+                    {ing.name}
                   </span>
-                  <button
-                    onClick={() => setActiveRecipe(null)}
-                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  <span
+                    className="text-sm font-semibold px-3 py-0.5 rounded-full"
+                    style={{ background: "hsl(38, 40%, 90%)", color: "hsl(15, 55%, 38%)" }}
                   >
-                    <Icon name="X" size={18} />
-                  </button>
-                </div>
-                <h2
-                  className="font-display text-4xl font-bold mb-4"
-                  style={{ color: "hsl(20, 25%, 18%)" }}
-                >
-                  {selectedRecipe.name}
-                </h2>
+                    {ing.amount}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
 
-                {/* Tabs */}
+        {/* Steps */}
+        <section className="animate-fade-in-up" style={{ animationDelay: "0.25s", opacity: 0 }}>
+          <div className="flex items-center gap-3 mb-7">
+            <div className="w-7 h-px" style={{ background: "hsl(15, 60%, 42%)" }} />
+            <h2 className="font-display text-3xl font-semibold" style={{ color: "hsl(20, 25%, 20%)" }}>
+              Пошаговый рецепт
+            </h2>
+          </div>
+
+          <div className="space-y-4">
+            {steps.map((step) => {
+              const isOpen = activeStep === step.num;
+              return (
                 <div
-                  className="flex gap-1 mb-6 p-1 rounded-xl"
-                  style={{ background: "hsl(38, 25%, 90%)" }}
+                  key={step.num}
+                  className="rounded-2xl overflow-hidden shadow-sm transition-all duration-300"
+                  style={{
+                    background: isOpen ? "hsl(15, 60%, 42%)" : "hsl(35, 25%, 98%)",
+                  }}
                 >
-                  {(["history", "recipe", "nutrition"] as const).map((tab) => (
-                    <button
-                      key={tab}
-                      onClick={() => setActiveTab(tab)}
-                      className="flex-1 py-2 px-3 rounded-lg text-sm font-body font-medium transition-all duration-200"
+                  <button
+                    className="w-full flex items-center gap-4 p-5 text-left transition-colors duration-200"
+                    onClick={() => setActiveStep(isOpen ? null : step.num)}
+                  >
+                    <div
+                      className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 font-display text-lg font-bold transition-colors duration-300"
                       style={
-                        activeTab === tab
-                          ? { background: "hsl(15, 60%, 42%)", color: "hsl(35, 30%, 96%)" }
-                          : { color: "hsl(20, 15%, 48%)" }
+                        isOpen
+                          ? { background: "rgba(255,255,255,0.25)", color: "hsl(40,70%,95%)" }
+                          : { background: "hsl(38, 40%, 88%)", color: "hsl(15, 55%, 38%)" }
                       }
                     >
-                      {tab === "history" ? "История" : tab === "recipe" ? "Рецепт" : "Питание"}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Tab content */}
-                {activeTab === "history" && (
-                  <div className="animate-fade-in">
-                    <p
-                      className="font-body text-sm leading-relaxed mb-4"
-                      style={{ color: "hsl(20, 15%, 40%)" }}
-                    >
-                      {selectedRecipe.description}
-                    </p>
-                    <div className="rounded-2xl p-4" style={{ background: "hsl(38, 35%, 92%)" }}>
-                      <div className="flex items-center gap-2 mb-2">
-                        <Icon name="BookOpen" size={15} />
-                        <span
-                          className="font-body text-xs uppercase tracking-widest font-semibold"
-                          style={{ color: "hsl(15, 50%, 40%)" }}
-                        >
-                          История блюда
-                        </span>
-                      </div>
-                      <p
-                        className="font-body text-sm leading-relaxed italic"
-                        style={{ color: "hsl(20, 20%, 38%)" }}
-                      >
-                        {selectedRecipe.history}
-                      </p>
+                      {step.num}
                     </div>
-                  </div>
-                )}
-
-                {activeTab === "recipe" && (
-                  <div className="animate-fade-in">
-                    <div className="flex gap-4 mb-5">
-                      <div
-                        className="flex items-center gap-2 text-sm font-body"
-                        style={{ color: "hsl(20, 15%, 48%)" }}
+                    <div className="flex-1">
+                      <span
+                        className="font-semibold text-base"
+                        style={{ color: isOpen ? "hsl(40,60%,94%)" : "hsl(20, 25%, 18%)" }}
                       >
-                        <Icon name="Clock" size={15} /> {selectedRecipe.time}
-                      </div>
-                      <div
-                        className="flex items-center gap-2 text-sm font-body"
-                        style={{ color: "hsl(20, 15%, 48%)" }}
-                      >
-                        <Icon name="Users" size={15} /> {selectedRecipe.servings} порций
-                      </div>
-                      <div
-                        className="flex items-center gap-2 text-sm font-body"
-                        style={{ color: "hsl(20, 15%, 48%)" }}
-                      >
-                        <Icon name="ChefHat" size={15} /> {selectedRecipe.difficulty}
-                      </div>
+                        {step.title}
+                      </span>
                     </div>
-                    <h4
-                      className="font-body text-xs uppercase tracking-widest font-semibold mb-3"
-                      style={{ color: "hsl(15, 50%, 40%)" }}
-                    >
-                      Ингредиенты
-                    </h4>
-                    <ul className="space-y-2">
-                      {selectedRecipe.ingredients.map((ing, idx) => (
-                        <li
-                          key={idx}
-                          className="flex items-center gap-3 font-body text-sm"
-                          style={{ color: "hsl(20, 20%, 35%)" }}
-                        >
-                          <span
-                            className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                            style={{ background: "hsl(15, 60%, 42%)" }}
-                          />
-                          {ing}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {activeTab === "nutrition" && (
-                  <div className="animate-fade-in">
                     <div
-                      className="flex items-center gap-4 mb-6 p-4 rounded-2xl"
-                      style={{ background: "hsl(15, 60%, 42%)", color: "hsl(35, 30%, 96%)" }}
+                      className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 transition-colors duration-300"
+                      style={
+                        isOpen
+                          ? { background: "rgba(255,255,255,0.2)" }
+                          : { background: "hsl(38, 30%, 90%)" }
+                      }
                     >
-                      <div className="text-center flex-1">
-                        <div className="font-display text-3xl font-bold">{selectedRecipe.calories}</div>
-                        <div className="font-body text-xs opacity-80 uppercase tracking-wide">ккал / порция</div>
-                      </div>
-                      <div className="w-px h-12 opacity-30" style={{ background: "hsl(35, 30%, 96%)" }} />
-                      <div className="flex-1 text-center">
-                        <Icon name="Flame" size={20} className="mx-auto mb-1 opacity-70" />
-                        <div className="font-body text-xs opacity-80">Энергетическая ценность</div>
+                      <Icon
+                        name={isOpen ? "ChevronUp" : "ChevronDown"}
+                        size={15}
+                        style={{ color: isOpen ? "hsl(40,60%,94%)" : "hsl(20,15%,50%)" }}
+                      />
+                    </div>
+                  </button>
+
+                  {isOpen && (
+                    <div className="px-5 pb-5 animate-fade-in">
+                      <p
+                        className="text-sm leading-relaxed mb-3"
+                        style={{ color: "hsl(38, 40%, 90%)" }}
+                      >
+                        {step.text}
+                      </p>
+                      <div
+                        className="flex items-start gap-2 rounded-xl p-3"
+                        style={{ background: "rgba(255,255,255,0.15)" }}
+                      >
+                        <span className="text-base mt-0.5">💡</span>
+                        <p className="text-xs leading-relaxed italic" style={{ color: "hsl(40, 50%, 88%)" }}>
+                          {step.tip}
+                        </p>
                       </div>
                     </div>
-                    <NutritionBar label="Белки" value={selectedRecipe.nutrition.protein} max={40} color="hsl(200, 60%, 50%)" />
-                    <NutritionBar label="Жиры" value={selectedRecipe.nutrition.fat} max={40} color="hsl(35, 80%, 55%)" />
-                    <NutritionBar label="Углеводы" value={selectedRecipe.nutrition.carbs} max={80} color="hsl(15, 60%, 50%)" />
-                    <NutritionBar label="Клетчатка" value={selectedRecipe.nutrition.fiber} max={15} color="hsl(140, 45%, 50%)" />
-                    <p className="font-body text-xs mt-4" style={{ color: "hsl(20, 15%, 60%)" }}>
-                      * Пищевая ценность указана на одну порцию при среднем способе приготовления
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
-        )}
-      </main>
+        </section>
+
+        {/* Final note */}
+        <div
+          className="mt-14 rounded-3xl p-8 text-center animate-fade-in-up"
+          style={{ background: "hsl(35, 25%, 98%)", animationDelay: "0.4s", opacity: 0 }}
+        >
+          <span className="text-4xl block mb-3">🧈</span>
+          <h3 className="font-display text-2xl font-semibold mb-2" style={{ color: "hsl(20, 25%, 20%)" }}>
+            Приятного аппетита!
+          </h3>
+          <p className="text-sm leading-relaxed" style={{ color: "hsl(20, 15%, 50%)" }}>
+            Подавайте со сметаной, вареньем, мёдом или икрой.<br />
+            Блины лучше всего есть сразу — горячими, с любовью.
+          </p>
+        </div>
+
+      </div>
 
       {/* Footer */}
       <footer
-        className="text-center py-10 px-6 mt-8 border-t"
-        style={{ borderColor: "hsl(35, 20%, 84%)" }}
+        className="text-center py-8 px-6 border-t"
+        style={{ borderColor: "hsl(35, 20%, 87%)" }}
       >
-        <p className="font-display text-2xl mb-2" style={{ color: "hsl(20, 25%, 28%)" }}>
+        <p className="font-display text-xl mb-1" style={{ color: "hsl(20, 25%, 32%)" }}>
           Кухня с душой
         </p>
-        <p className="font-body text-sm" style={{ color: "hsl(20, 15%, 55%)" }}>
+        <p className="text-sm" style={{ color: "hsl(20, 15%, 58%)" }}>
           Готовьте с любовью — и ваши блюда будут незабываемы
         </p>
-        <p className="font-body text-sm mt-3" style={{ color: "hsl(20, 15%, 50%)" }}>
+        <p className="text-sm mt-2" style={{ color: "hsl(20, 15%, 55%)" }}>
           Связаться:{" "}
-          <a href="tel:89027642600" className="font-medium hover:underline" style={{ color: "hsl(15, 60%, 42%)" }}>
+          <a
+            href="tel:89027642600"
+            className="font-medium hover:underline"
+            style={{ color: "hsl(15, 60%, 42%)" }}
+          >
             8 (902) 764-26-00
           </a>
         </p>
