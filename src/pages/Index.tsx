@@ -4,6 +4,15 @@ import Icon from "@/components/ui/icon";
 const HERO_IMG = "https://cdn.poehali.dev/projects/b76d4371-5050-496e-8feb-c83dfe8aaaf7/files/87ee6024-bc25-47e0-8257-aea3f46adde4.jpg";
 const PREP_IMG = "https://cdn.poehali.dev/projects/b76d4371-5050-496e-8feb-c83dfe8aaaf7/files/7190225c-2a44-487b-9761-d1c12916a6e1.jpg";
 
+const toppings = [
+  { emoji: "🍯", name: "Мёд", description: "Натуральный цветочный или гречишный мёд — классика на все времена" },
+  { emoji: "🫐", name: "Варенье", description: "Черничное, клубничное, смородиновое — по вкусу и настроению" },
+  { emoji: "🥛", name: "Сметана", description: "Жирная домашняя сметана — самая традиционная подача" },
+  { emoji: "🐟", name: "Красная икра", description: "Праздничный вариант — солёная икра со сливочным маслом" },
+  { emoji: "🍌", name: "Банан и шоколад", description: "Нарезанный банан и растопленный шоколад — любимое у детей" },
+  { emoji: "🧀", name: "Творог со сгущёнкой", description: "Нежный творог с ложкой сгущённого молока — сытно и вкусно" },
+];
+
 const ingredients = [
   { amount: "500 мл", name: "молоко" },
   { amount: "2 шт", name: "яйца" },
@@ -245,6 +254,29 @@ export default function Index() {
                 </div>
               );
             })}
+          </div>
+        </section>
+
+        {/* Toppings */}
+        <section className="mt-16 animate-fade-in-up" style={{ animationDelay: "0.3s", opacity: 0 }}>
+          <div className="flex items-center gap-3 mb-7">
+            <div className="w-7 h-px" style={{ background: "hsl(15, 60%, 42%)" }} />
+            <h2 className="font-display text-3xl font-semibold" style={{ color: "hsl(20, 25%, 20%)" }}>
+              Варианты начинок
+            </h2>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {toppings.map((t) => (
+              <div
+                key={t.name}
+                className="rounded-2xl p-5 flex flex-col gap-2 transition-all duration-200 hover:shadow-md hover:scale-[1.02]"
+                style={{ background: "hsl(35, 25%, 98%)" }}
+              >
+                <span className="text-3xl">{t.emoji}</span>
+                <span className="font-semibold text-sm" style={{ color: "hsl(20, 25%, 20%)" }}>{t.name}</span>
+                <span className="text-xs leading-relaxed" style={{ color: "hsl(20, 15%, 52%)" }}>{t.description}</span>
+              </div>
+            ))}
           </div>
         </section>
 
