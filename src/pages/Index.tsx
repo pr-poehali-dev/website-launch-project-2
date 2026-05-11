@@ -397,6 +397,12 @@ export default function Index() {
         <p className="font-body text-sm" style={{ color: "hsl(20, 15%, 55%)" }}>
           Готовьте с любовью — и ваши блюда будут незабываемы
         </p>
+        <p className="font-body text-sm mt-3" style={{ color: "hsl(20, 15%, 50%)" }}>
+          Связаться:{" "}
+          <a href="tel:89027642600" className="font-medium hover:underline" style={{ color: "hsl(15, 60%, 42%)" }}>
+            8 (902) 764-26-00
+          </a>
+        </p>
       </footer>
     </div>
   );
